@@ -11,13 +11,45 @@ import java.util.Random;
  */
 public class SortRacer {
 
+	public static class SortMerge implements Runnable {
+		public void run() {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSSS"); //for output
+
+			Integer[] numbers;
+			numbers = shuffled((int)Math.pow(10,7), 448);
+
+			System.out.println("Starting merge sort at "+dateFormat.format(new Date()));
+
+			Sorting.mergeSort(numbers);
+
+			System.out.println("Mergesort finished at "+dateFormat.format(new Date())+" !");
+
+		}
+	}
+
+	public static class SortQuick implements Runnable {
+		public void run() {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSSS"); //for output
+
+			Integer[] numbers;
+			numbers = shuffled((int)Math.pow(10,7), 448);
+
+			System.out.println("Starting quick sort at "+dateFormat.format(new Date()));
+
+			Sorting.quickSort(numbers);
+
+			System.out.println("Quicksort finished at "+dateFormat.format(new Date())+" !");
+
+		}
+	}
+
 	public static void main(String[] args) 
 	{
-		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSSS"); //for output
+		/*SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSSS"); //for output
 		Integer[] nums;
 
 		
-		/** Merge Sort **/
+		/** Merge Sort 
 		nums = shuffled((int)Math.pow(10,7), 448); //a list of shuffled 10 million numbers
 
 		System.out.println("Starting merge sort at "+dateFormat.format(new Date()));
@@ -25,11 +57,18 @@ public class SortRacer {
 		System.out.println("Merge sort finished at "+dateFormat.format(new Date())+" !");
 
 		
-		/** Quick Sort **/
+		/** Quick Sort *
 		nums = shuffled((int)Math.pow(10,7), 448); //a list of shuffled 10 million numbers
 		System.out.println("Starting quicksort at "+dateFormat.format(new Date()));
 		Sorting.quickSort(nums);
 		System.out.println("Quicksort finished at "+dateFormat.format(new Date())+" !");
+
+		Thread mergeing = new Thread(new SortMerge);
+		sorting.start();*/
+		Thread mergeing = new Thread(new SortMerge());
+		Thread quicking = new Thread(new SortQuick());
+		mergeing.start();
+		quicking.start();
 	}
 	
 	

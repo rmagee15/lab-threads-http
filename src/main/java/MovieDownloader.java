@@ -18,6 +18,8 @@ import java.util.Scanner;
  */
 public class MovieDownloader {
 
+	//handles getting the JSON formatted information from the api about a movie based 
+	//on the the String parameter passed in by the user
 	public static String[] downloadMovieData(String movie) {
 
 		//construct the url for the omdbapi API
@@ -28,71 +30,71 @@ public class MovieDownloader {
 			return null;
 		}
 
-		HttpURLConnection urlConnection = null;
-		BufferedReader reader = null;
+		HttpURLConnection urlConnection = null; //specific kind of urlconnection that supports http
+		BufferedReader reader = null; //reads text from an inputStream
 
 		String[] movies = null;
 
 		try {
 
-			URL url = new URL(urlString);
+			URL url = new URL(urlString); //make a url object to the ombapi api
 
-			urlConnection = (HttpURLConnection) url.openConnection();
-			urlConnection.setRequestMethod("GET");
-			urlConnection.connect();
+			urlConnection = (HttpURLConnection) url.openConnection(); //gets a URL Connection to what the url specifies
+			urlConnection.setRequestMethod("GET"); 
+			urlConnection.connect(); //establishes a communication to the url
 
-			InputStream inputStream = urlConnection.getInputStream();
-			StringBuffer buffer = new StringBuffer();
-			if (inputStream == null) {
+			InputStream inputStream = urlConnection.getInputStream(); //gets an inputStream object from the url
+			StringBuffer buffer = new StringBuffer(); //object like a string but useful when you have multiple threads
+			if (inputStream == null) { //error handling
 				return null;
 			}
-			reader = new BufferedReader(new InputStreamReader(inputStream));
+			reader = new BufferedReader(new InputStreamReader(inputStream)); //helps make reading from things like inputStreamReaders more efficient
 
 			String line = reader.readLine();
-			while (line != null) {
-				buffer.append(line + "\n");
+			while (line != null) { //while there is a next line
+				buffer.append(line + "\n"); //adding data from the reader to the buffer
 				line = reader.readLine();
 			}
 
-			if (buffer.length() == 0) {
+			if (buffer.length() == 0) { //no results
 				return null;
 			}
 			String results = buffer.toString();
 			results = results.replace("{\"Search\":[","");
 			results = results.replace("]}","");
-			results = results.replace("},", "},\n");
+			results = results.replace("},", "},\n"); //formating results
 
-			movies = results.split("\n");
+			movies = results.split("\n"); //split results into array of movies
 		} 
-		catch (IOException e) {
+		catch (IOException e) { //input/output exception
 			return null;
 		} 
-		finally {
+		finally { //always executes
 			if (urlConnection != null) {
-				urlConnection.disconnect();
+				urlConnection.disconnect(); //disconnect at the end of session
 			}
 			if (reader != null) {
 				try {
-					reader.close();
+					reader.close(); //close at end of execution
 				} 
 				catch (IOException e) {
 				}
 			}
 		}
 
-		return movies;
+		return movies; //return formatted results as array
 	}
 
 
 	public static void main(String[] args) 
 	{
-		Scanner sc = new Scanner(System.in);
+		Scanner sc = new Scanner(System.in); //helps get input from user
 
-		boolean searching = true;
+		boolean searching = true; //variable that allows user to terminate
 
-		while(searching) {					
+		while(searching) {
 			System.out.print("Enter a movie name to search for or type 'q' to quit: ");
-			String searchTerm = sc.nextLine().trim();
+			String searchTerm = sc.nextLine().trim(); //gets line of imput from user
 			if(searchTerm.toLowerCase().equals("q")){
 				searching = false;
 			}
